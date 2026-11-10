@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+yfinance
+google-genai
+python-dotenv
+pydantic
