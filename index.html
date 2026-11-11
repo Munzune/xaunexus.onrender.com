@@ -2,7 +2,7 @@
 <html lang="mn" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>XAU NEXUS AI — Neural Gold Dashboard</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,8 +33,8 @@
                   #04060d;
       color: #e2e8f0;
       font-family: 'Inter', sans-serif;
-      overflow: hidden;
       user-select: none;
+      overflow-x: hidden;
     }
 
     .nexus-card {
@@ -73,18 +73,21 @@
       box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
     }
 
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
     ::-webkit-scrollbar { width: 4px; height: 4px; }
     ::-webkit-scrollbar-track { background: #050811; }
     ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 2px; }
   </style>
 </head>
 
-<body class="flex flex-col h-screen w-screen p-2.5 gap-2 text-[11px]">
+<body class="flex flex-col min-h-screen lg:h-screen w-full p-2 lg:p-2.5 gap-2 text-[11px] overflow-y-auto lg:overflow-hidden">
 
   <!-- ================= 1. TOP MENU BAR ================= -->
-  <header class="h-11 nexus-card rounded-xl px-4 flex items-center justify-between shrink-0">
-    <div class="flex items-center gap-6">
-      <div class="flex items-center gap-2.5">
+  <header class="nexus-card rounded-xl px-3 py-2 lg:px-4 lg:py-0 lg:h-11 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-2 shrink-0">
+    <div class="flex items-center justify-between w-full lg:w-auto gap-4">
+      <div class="flex items-center gap-2.5 shrink-0">
         <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-300 via-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/30">
           <i class="fa-solid fa-bolt-lightning text-slate-950 text-sm"></i>
         </div>
@@ -94,20 +97,29 @@
         </div>
       </div>
 
-      <nav class="flex items-center gap-1 text-xs font-medium">
-        <button onclick="switchView('home')" id="top-home" class="top-tab active-nav-purple px-3.5 py-1.5 rounded-lg flex items-center gap-1.5">
-          <i class="fa-solid fa-house text-purple-300 text-[11px]"></i> Нүүр
-        </button>
-        <button onclick="switchView('analysis')" id="top-analysis" class="top-tab text-slate-300 hover:text-white px-3 py-1.5 rounded-lg transition">AI Шинжилгээ</button>
-        <button onclick="switchView('signals')" id="top-signals" class="top-tab text-slate-300 hover:text-white px-3 py-1.5 rounded-lg transition">Сигнал</button>
-        <button onclick="switchView('chart')" id="top-chart" class="top-tab text-slate-300 hover:text-white px-3 py-1.5 rounded-lg transition">График</button>
-        <button onclick="switchView('news')" id="top-news" class="top-tab text-slate-300 hover:text-white px-3 py-1.5 rounded-lg transition">Мэдээ</button>
-        <button onclick="switchView('macro')" id="top-macro" class="top-tab text-slate-300 hover:text-white px-3 py-1.5 rounded-lg transition">Эдийн засаг</button>
-        <button onclick="switchView('journal')" id="top-journal" class="top-tab text-slate-300 hover:text-white px-3 py-1.5 rounded-lg transition">Журнал</button>
-      </nav>
+      <!-- Mobile Sphere State Buttons -->
+      <div class="flex lg:hidden items-center gap-1 bg-slate-950/90 p-1 rounded-lg border border-slate-800 font-mono text-[9px]">
+        <button onclick="setSphereState('default')" class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold">Def</button>
+        <button onclick="setSphereState('buy')" class="px-1.5 py-0.5 rounded hover:bg-emerald-500/20 text-emerald-400 font-bold">BUY</button>
+        <button onclick="setSphereState('sell')" class="px-1.5 py-0.5 rounded hover:bg-rose-500/20 text-rose-400 font-bold">SELL</button>
+      </div>
     </div>
 
-    <div class="flex items-center gap-3">
+    <!-- Scrollable Navigation Tabs on Mobile -->
+    <nav class="flex items-center gap-1 text-xs font-medium w-full lg:w-auto overflow-x-auto no-scrollbar pb-0.5 lg:pb-0">
+      <button onclick="switchView('home')" id="top-home" class="top-tab active-nav-purple px-3 py-1.5 rounded-lg flex items-center gap-1.5 shrink-0">
+        <i class="fa-solid fa-house text-purple-300 text-[11px]"></i> Нүүр
+      </button>
+      <button onclick="switchView('analysis')" id="top-analysis" class="top-tab text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg transition shrink-0">AI Шинжилгээ</button>
+      <button onclick="switchView('signals')" id="top-signals" class="top-tab text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg transition shrink-0">Сигнал</button>
+      <button onclick="switchView('chart')" id="top-chart" class="top-tab text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg transition shrink-0">График</button>
+      <button onclick="switchView('news')" id="top-news" class="top-tab text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg transition shrink-0">Мэдээ</button>
+      <button onclick="switchView('macro')" id="top-macro" class="top-tab text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg transition shrink-0">Эдийн засаг</button>
+      <button onclick="switchView('journal')" id="top-journal" class="top-tab text-slate-300 hover:text-white px-2.5 py-1.5 rounded-lg transition shrink-0">Журнал</button>
+    </nav>
+
+    <!-- Desktop Sphere State Buttons -->
+    <div class="hidden lg:flex items-center gap-3 shrink-0">
       <div class="flex items-center gap-1 bg-slate-950/90 p-1 rounded-lg border border-slate-800 font-mono text-[10px]">
         <span class="text-slate-400 px-1.5">БӨӨМ:</span>
         <button onclick="setSphereState('default')" class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold">Default</button>
@@ -122,38 +134,38 @@
   </header>
 
   <!-- ================= 2. GOLD PRICE & MACRO TICKER BAR ================= -->
-  <div class="h-11 nexus-card rounded-xl px-4 flex items-center justify-between shrink-0">
-    <div class="flex items-center gap-4">
-      <div class="flex items-center gap-2 bg-gradient-to-r from-amber-500/20 to-amber-900/10 border border-amber-500/40 px-3 py-1 rounded-lg">
-        <i class="fa-solid fa-coins text-amber-400 text-sm"></i>
-        <span class="font-bold text-white text-sm tracking-wide">XAU/USD</span>
+  <div class="nexus-card rounded-xl px-3 py-2 lg:px-4 lg:py-0 lg:h-11 flex flex-wrap items-center justify-between gap-2 shrink-0">
+    <div class="flex items-center gap-2.5 sm:gap-4">
+      <div class="flex items-center gap-1.5 bg-gradient-to-r from-amber-500/20 to-amber-900/10 border border-amber-500/40 px-2.5 py-1 rounded-lg">
+        <i class="fa-solid fa-coins text-amber-400 text-xs sm:text-sm"></i>
+        <span class="font-bold text-white text-xs sm:text-sm tracking-wide">XAU/USD</span>
       </div>
-      <div class="flex items-baseline gap-3">
-        <span class="text-2xl font-extrabold font-mono text-white tracking-tight" id="live-gold-price">4,018.42</span>
-        <span class="text-rose-400 font-mono font-bold text-xs" id="live-gold-change">-86.10 (-2.09%) ▼</span>
+      <div class="flex items-baseline gap-2 sm:gap-3">
+        <span class="text-xl sm:text-2xl font-extrabold font-mono text-white tracking-tight" id="live-gold-price">4,018.42</span>
+        <span class="text-rose-400 font-mono font-bold text-[10px] sm:text-xs" id="live-gold-change">-86.10 (-2.09%) ▼</span>
       </div>
     </div>
 
-    <div class="flex items-center gap-3 font-mono text-xs">
-      <div class="bg-slate-900/90 border border-slate-800 px-3 py-1 rounded-lg flex items-center gap-2">
+    <div class="flex items-center gap-1.5 sm:gap-3 font-mono text-[10px] sm:text-xs w-full sm:w-auto justify-between sm:justify-end">
+      <div class="bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded-lg flex items-center gap-1.5">
         <span class="text-slate-400">DXY</span>
         <span class="text-white font-bold" id="dxy-val">102.35</span>
       </div>
-      <div class="bg-slate-900/90 border border-slate-800 px-3 py-1 rounded-lg flex items-center gap-2">
+      <div class="bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded-lg flex items-center gap-1.5">
         <span class="text-slate-400">US10Y</span>
         <span class="text-white font-bold" id="us10y-val">4.102%</span>
       </div>
-      <div class="bg-slate-900/90 border border-slate-800 px-3.5 py-1 rounded-lg text-cyan-300 font-medium" id="clock-display">
-        NY (EST) --:--:--
+      <div class="bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded-lg text-cyan-300 font-medium" id="clock-display">
+        NY --:--:--
       </div>
     </div>
   </div>
 
   <!-- ================= 3. MAIN WORKSPACE AREA ================= -->
-  <div class="flex-1 flex gap-2.5 overflow-hidden">
+  <div class="flex-1 flex flex-col lg:flex-row gap-2.5 lg:overflow-hidden">
 
-    <!-- LEFT SIDEBAR NAVIGATION -->
-    <aside class="w-48 nexus-card rounded-xl p-2.5 flex flex-col justify-between shrink-0">
+    <!-- LEFT SIDEBAR NAVIGATION (Desktop Only to save Mobile screen space) -->
+    <aside class="hidden lg:flex w-48 nexus-card rounded-xl p-2.5 flex-col justify-between shrink-0">
       <div class="space-y-1 text-xs">
         <button onclick="switchView('home')" id="side-home" class="side-tab w-full active-nav-purple px-3 py-2 rounded-lg flex items-center gap-2.5 font-semibold text-left">
           <i class="fa-solid fa-atom text-purple-300 w-4"></i> AI Core
@@ -220,85 +232,76 @@
     </aside>
 
     <!-- ================= VIEW 1: НҮҮР (CORE DASHBOARD) ================= -->
-    <div id="view-home" class="main-view flex-1 flex flex-col gap-2 overflow-hidden">
+    <div id="view-home" class="main-view flex-1 flex flex-col gap-2.5 lg:overflow-hidden">
 
-      <div class="flex-1 grid grid-cols-12 gap-2.5 min-h-0">
+      <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-2.5 lg:min-h-0">
 
-        <!-- CENTER COLUMN (8 Cols): Sphere Stage + Flow Stream -->
-        <div class="col-span-8 flex flex-col gap-2 min-h-0">
+        <!-- CENTER COLUMN (8 Cols on Desktop, Full on Mobile) -->
+        <div class="lg:col-span-8 flex flex-col gap-2 lg:min-h-0">
 
-          <div class="flex-1 nexus-card rounded-xl p-3 flex flex-col relative overflow-hidden">
+          <div class="flex-1 nexus-card rounded-xl p-3 flex flex-col relative overflow-hidden min-h-[360px] lg:min-h-0">
 
             <div class="z-20">
-              <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center gap-2">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <div class="flex items-center gap-1.5 flex-wrap">
                   <span class="font-bold text-amber-400 text-xs tracking-wide">CLAUDE OPUS 5.5</span>
                   <span class="text-cyan-400">✦</span>
                   <span class="font-bold text-white text-xs tracking-wide">GEMINI 2.5 PRO</span>
-                  <span class="text-[10px] font-mono text-slate-400 uppercase ml-1">1:3 R:R LIVE TRADE MANAGER</span>
+                  <span class="text-[9px] font-mono text-slate-400 uppercase hidden sm:inline ml-1">1:3 R:R LIVE TRADE MANAGER</span>
                 </div>
                 <button onclick="triggerBackendScan()" id="btn-live-scan" class="px-3 py-1 rounded-md bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/60 text-cyan-300 font-mono text-[10px] font-bold flex items-center gap-1.5 transition shadow-[0_0_12px_rgba(0,242,254,0.3)]">
                   <i class="fa-solid fa-bolt"></i> AI Live Scan (1:3 RR)
                 </button>
               </div>
 
-              <div class="grid grid-cols-6 gap-1.5 font-mono text-[10px]">
-                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1"><i class="fa-solid fa-magnifying-glass-chart text-cyan-400 text-[9px]"></i> market.scan</div>
-                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1"><i class="fa-solid fa-water text-cyan-400 text-[9px]"></i> liquidity.map</div>
-                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1"><i class="fa-solid fa-arrow-down-up-across-line text-cyan-400 text-[9px]"></i> orderflow.ai</div>
-                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1"><i class="fa-solid fa-globe text-cyan-400 text-[9px]"></i> macro.context</div>
-                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1"><i class="fa-regular fa-newspaper text-cyan-400 text-[9px]"></i> news.parser</div>
-                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1"><i class="fa-solid fa-brain text-cyan-400 text-[9px]"></i> sentiment.ai</div>
+              <div class="grid grid-cols-3 sm:grid-cols-6 gap-1.5 font-mono text-[9px] sm:text-[10px]">
+                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1 truncate"><i class="fa-solid fa-magnifying-glass-chart text-cyan-400 text-[9px]"></i> market.scan</div>
+                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1 truncate"><i class="fa-solid fa-water text-cyan-400 text-[9px]"></i> liquidity.map</div>
+                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1 truncate"><i class="fa-solid fa-arrow-down-up-across-line text-cyan-400 text-[9px]"></i> orderflow.ai</div>
+                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1 truncate"><i class="fa-solid fa-globe text-cyan-400 text-[9px]"></i> macro.context</div>
+                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1 truncate"><i class="fa-regular fa-newspaper text-cyan-400 text-[9px]"></i> news.parser</div>
+                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1 truncate"><i class="fa-solid fa-brain text-cyan-400 text-[9px]"></i> sentiment.ai</div>
 
-                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1"><i class="fa-solid fa-arrows-up-down text-cyan-400 text-[9px]"></i> pdH/pdL</div>
-                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1"><i class="fa-solid fa-crosshairs text-cyan-400 text-[9px]"></i> bsl/ssl</div>
-                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1"><i class="fa-solid fa-grip-lines text-cyan-400 text-[9px]"></i> ndog/nwog</div>
-                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1"><i class="fa-regular fa-clock text-amber-400 text-[9px]"></i> session.flow</div>
-                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1"><i class="fa-solid fa-shield-halved text-cyan-400 text-[9px]"></i> sl.protector</div>
-                <button onclick="triggerBackendScan()" class="px-2 py-1 rounded bg-emerald-950/90 hover:bg-emerald-900 border border-emerald-500/60 text-emerald-300 font-bold flex items-center gap-1 shadow-[0_0_10px_rgba(16,185,129,0.25)]">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> signal.detect
+                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1 truncate"><i class="fa-solid fa-arrows-up-down text-cyan-400 text-[9px]"></i> pdH/pdL</div>
+                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1 truncate"><i class="fa-solid fa-crosshairs text-cyan-400 text-[9px]"></i> bsl/ssl</div>
+                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1 truncate"><i class="fa-solid fa-grip-lines text-cyan-400 text-[9px]"></i> ndog/nwog</div>
+                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1 truncate"><i class="fa-regular fa-clock text-amber-400 text-[9px]"></i> session.flow</div>
+                <div class="nexus-pill px-2 py-1 rounded text-slate-300 flex items-center gap-1 truncate"><i class="fa-solid fa-shield-halved text-cyan-400 text-[9px]"></i> sl.protector</div>
+                <button onclick="triggerBackendScan()" class="px-2 py-1 rounded bg-emerald-950/90 hover:bg-emerald-900 border border-emerald-500/60 text-emerald-300 font-bold flex items-center gap-1 truncate shadow-[0_0_10px_rgba(16,185,129,0.25)]">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping shrink-0"></span> signal.detect
                 </button>
               </div>
             </div>
 
             <!-- THE LIVING 3D RIBBON SPHERE CANVAS -->
-            <div class="flex-1 relative flex items-center justify-center min-h-0">
+            <div class="flex-1 relative flex items-center justify-center min-h-[240px] lg:min-h-0">
               <canvas id="sphere-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
 
-              <div class="absolute left-2 top-6 z-20 pointer-events-none space-y-2">
+              <div class="hidden sm:block absolute left-2 top-4 z-20 pointer-events-none space-y-1.5">
                 <div class="text-[10px] font-mono font-bold text-slate-300 tracking-wider uppercase">DATA INPUT</div>
-                <ul class="space-y-1.5 text-[11px] text-slate-300">
+                <ul class="space-y-1 text-[10px] text-slate-300">
                   <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981]"></span> Price Feed (Spot)</li>
                   <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]"></span> Order Flow</li>
                   <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]"></span> Liquidity</li>
                   <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sky-400"></span> SL Guard (BE/Trail)</li>
-                  <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sky-400"></span> 50% CE Monitor</li>
                   <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sky-400"></span> cTrader Bridge</li>
                 </ul>
               </div>
 
-              <div class="absolute right-2 top-6 z-20 pointer-events-none text-right">
-                <div class="text-[10px] font-mono font-bold text-slate-300 tracking-wider uppercase mb-1.5">AI ANALYSIS</div>
-                <div class="flex items-center justify-end gap-2 mb-3">
-                  <div class="relative w-9 h-9 flex items-center justify-center">
-                    <svg class="w-9 h-9 -rotate-90">
-                      <circle cx="18" cy="18" r="14" stroke="#1e293b" stroke-width="3.5" fill="none"/>
-                      <circle cx="18" cy="18" r="14" stroke="#00f2fe" stroke-width="3.5" stroke-dasharray="88" stroke-dashoffset="21" fill="none"/>
-                    </svg>
-                  </div>
-                  <span class="text-xl font-extrabold font-mono text-white" id="analysis-pct">84%</span>
+              <div class="absolute right-2 top-4 z-20 pointer-events-none text-right">
+                <div class="text-[10px] font-mono font-bold text-slate-300 tracking-wider uppercase mb-1">AI ANALYSIS</div>
+                <div class="flex items-center justify-end gap-2 mb-2">
+                  <span class="text-lg sm:text-xl font-extrabold font-mono text-white" id="analysis-pct">84%</span>
                 </div>
-                <div class="space-y-1 text-[10px] font-mono text-slate-300">
-                  <div class="flex items-center justify-end gap-2"><span>Spot Sync...</span> <span class="text-emerald-400">✓</span></div>
-                  <div class="flex items-center justify-end gap-2"><span>1:3 RR Calc...</span> <span class="text-emerald-400">✓</span></div>
-                  <div class="flex items-center justify-end gap-2"><span>cBot Ready...</span> <span class="text-cyan-400 animate-ping">•</span></div>
-                  <div class="flex items-center justify-end gap-2 text-slate-400"><span>Session:</span> <span id="session-badge" class="text-amber-300">NY</span></div>
+                <div class="space-y-0.5 text-[9px] sm:text-[10px] font-mono text-slate-300">
+                  <div class="flex items-center justify-end gap-1.5"><span>Spot Sync...</span> <span class="text-emerald-400">✓</span></div>
+                  <div class="flex items-center justify-end gap-1.5"><span>1:3 RR...</span> <span class="text-emerald-400">✓</span></div>
+                  <div class="flex items-center justify-end gap-1.5 text-slate-400"><span>Session:</span> <span id="session-badge" class="text-amber-300">NY</span></div>
                 </div>
               </div>
 
-              <div class="absolute left-2 bottom-2 z-20 bg-slate-950/85 border border-cyan-500/30 rounded-lg px-3 py-2 font-mono text-[10px] space-y-0.5 shadow-lg">
+              <div class="absolute left-2 bottom-2 z-20 bg-slate-950/85 border border-cyan-500/30 rounded-lg px-2.5 py-1.5 font-mono text-[9px] sm:text-[10px] space-y-0.5 shadow-lg">
                 <div class="text-slate-400">MODEL: <span class="text-white font-semibold">ICT 2026 LIVE GUARD</span></div>
-                <div class="text-slate-400">TARGET: <span class="text-amber-400 font-semibold">1:3 R:R + SL TRAIL</span></div>
                 <div class="text-slate-400">STATUS: <span id="sphere-status-text" class="text-emerald-400 font-bold">MONITORING</span></div>
               </div>
             </div>
@@ -313,52 +316,14 @@
           </div>
         </div>
 
-        <!-- RIGHT COLUMN (4 Cols): AI DISCOVERY & KEY LEVELS -->
-        <div class="col-span-4 nexus-card rounded-xl p-3 flex flex-col justify-between overflow-y-auto">
+        <!-- RIGHT COLUMN (4 Cols on Desktop, Full on Mobile): AI DISCOVERY & KEY LEVELS -->
+        <div class="lg:col-span-4 nexus-card rounded-xl p-3 flex flex-col justify-between lg:overflow-y-auto">
           <div>
             <div class="flex items-center justify-between mb-2">
               <span class="px-2 py-0.5 rounded bg-emerald-950/90 border border-emerald-500/50 text-emerald-400 font-mono font-bold text-[10px] flex items-center gap-1.5">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> AI CORE ONLINE
               </span>
               <span class="text-[10px] font-mono text-slate-400">REAL-TIME</span>
-            </div>
-
-            <div class="text-[10px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-2">AI DISCOVERY (REAL-TIME)</div>
-
-            <div class="space-y-2 bg-slate-950/60 p-2 rounded-lg border border-slate-800/80 mb-3">
-              <div class="flex items-center justify-between">
-                <span class="font-mono text-amber-400 font-bold text-xs w-20">CLGO</span>
-                <svg class="flex-1 h-5" viewBox="0 0 160 24">
-                  <path d="M0,12 Q6,2 12,12 T24,12 T36,12 T48,12 T60,12 T72,12 T84,12 T96,12 T108,12 T120,12 T132,12 T144,12 T160,12" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
-                </svg>
-              </div>
-              <div class="flex items-center justify-between">
-                <div class="w-20 leading-tight">
-                  <span class="text-rose-400 text-[10px] block">Price Flow</span>
-                  <span class="text-purple-400 text-[9px] block">Liquidity</span>
-                </div>
-                <svg class="flex-1 h-5" viewBox="0 0 160 24">
-                  <path d="M0,14 C15,4 30,20 45,10 C60,2 75,18 90,12 C105,6 120,20 135,8 L160,12" fill="none" stroke="#c084fc" stroke-width="1.5"/>
-                </svg>
-              </div>
-              <div class="flex items-center justify-between">
-                <span class="text-fuchsia-400 text-[10px] w-20">Volatility</span>
-                <svg class="flex-1 h-5" viewBox="0 0 160 24">
-                  <path d="M0,16 Q20,4 40,15 T80,12 T120,14 T160,10" fill="none" stroke="#e879f9" stroke-width="1.5"/>
-                </svg>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <div class="text-[10px] text-slate-300 font-medium mb-1">Market Density</div>
-              <div class="space-y-1 bg-slate-950/60 p-2 rounded-lg border border-slate-800/80">
-                <div class="h-1 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full" style="width: 82%"></div>
-                <div class="h-1 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full" style="width: 94%"></div>
-                <div class="h-1 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full" style="width: 68%"></div>
-                <div class="h-1 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full" style="width: 88%"></div>
-                <div class="h-1 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full" style="width: 54%"></div>
-                <div class="h-1 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full" style="width: 73%"></div>
-              </div>
             </div>
 
             <div class="mb-3">
@@ -406,12 +371,12 @@
               <span>Key Levels (Pepperstone Spot)</span>
               <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
             </div>
-            <div class="space-y-1 font-mono text-[10px]">
+            <div class="grid grid-cols-2 lg:grid-cols-1 gap-x-4 gap-y-1 font-mono text-[10px]">
               <div class="flex justify-between"><span class="flex items-center gap-1.5 text-slate-300"><span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>PDH</span><span class="text-white font-bold" id="lvl-pdh">4,147.70</span></div>
               <div class="flex justify-between"><span class="flex items-center gap-1.5 text-slate-300"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>PDL</span><span class="text-white font-bold" id="lvl-pdl">4,002.50</span></div>
               <div class="flex justify-between"><span class="flex items-center gap-1.5 text-slate-300"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>BSL</span><span class="text-white font-bold" id="lvl-bsl">4,052.50</span></div>
               <div class="flex justify-between"><span class="flex items-center gap-1.5 text-slate-300"><span class="w-1.5 h-1.5 rounded-full bg-amber-300"></span>SSL</span><span class="text-white font-bold" id="lvl-ssl">4,010.80</span></div>
-              <div class="flex justify-between"><span class="flex items-center gap-1.5 text-slate-300"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>NDOG (50% CE)</span><span class="text-white font-bold" id="lvl-ndog">4,121.75</span></div>
+              <div class="flex justify-between"><span class="flex items-center gap-1.5 text-slate-300"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>NDOG</span><span class="text-white font-bold" id="lvl-ndog">4,121.75</span></div>
               <div class="flex justify-between"><span class="flex items-center gap-1.5 text-slate-300"><span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span>NWOG</span><span class="text-white font-bold" id="lvl-nwog">4,065.40</span></div>
             </div>
           </div>
@@ -419,60 +384,24 @@
       </div>
 
       <!-- Lower 3 Cards Row -->
-      <div class="h-44 grid grid-cols-12 gap-2.5 shrink-0">
+      <div class="h-auto lg:h-44 grid grid-cols-1 lg:grid-cols-12 gap-2.5 shrink-0">
 
-        <!-- Card 1: MARKET SENTIMENT (AI) -->
-        <div class="col-span-4 nexus-card rounded-xl p-3 flex flex-col justify-between">
-          <div class="flex items-center justify-between text-[10px] font-mono font-bold text-slate-200">
-            <span>MARKET SENTIMENT (AI)</span>
-            <span class="text-cyan-400">✦ ❯</span>
-          </div>
-
-          <div class="flex flex-col items-center justify-center -mt-1">
-            <div class="relative w-36 h-20 flex items-end justify-center overflow-hidden">
-              <svg class="w-36 h-36 transform" viewBox="0 0 120 120">
-                <path d="M 16 60 A 44 44 0 0 1 104 60" fill="none" stroke="#1e293b" stroke-width="10" stroke-linecap="round"/>
-                <path d="M 16 60 A 44 44 0 0 1 82 22" fill="none" stroke="#10b981" stroke-width="10" stroke-linecap="round" style="filter: drop-shadow(0 0 6px #10b981);"/>
-              </svg>
-              <div class="absolute bottom-0 text-center leading-tight">
-                <div class="text-2xl font-extrabold font-mono text-white" id="sent-main-pct">72%</div>
-                <div class="text-xs font-bold text-emerald-400" id="sent-main-lbl">BULLISH</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-3 gap-2 font-mono text-[10px] text-center">
-            <div class="bg-emerald-950/60 border border-emerald-500/40 rounded-lg py-1">
-              <div class="text-emerald-300 text-[9px]">Bullish</div>
-              <div class="text-emerald-400 font-bold" id="sent-bull">72%</div>
-            </div>
-            <div class="bg-slate-900/80 border border-slate-700/60 rounded-lg py-1">
-              <div class="text-slate-300 text-[9px]">Neutral</div>
-              <div class="text-white font-bold" id="sent-neut">18%</div>
-            </div>
-            <div class="bg-rose-950/50 border border-rose-500/40 rounded-lg py-1">
-              <div class="text-rose-300 text-[9px]">Bearish</div>
-              <div class="text-rose-400 font-bold" id="sent-bear">10%</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 2: 1:3 R:R LIVE TRADE MANAGER & CTRADER BRIDGE -->
-        <div class="col-span-4 nexus-card rounded-xl p-2.5 flex flex-col justify-between">
-          <div class="flex items-center justify-between text-[10px] font-mono font-bold text-slate-200">
-            <span class="flex items-center gap-1"><i class="fa-solid fa-shield-halved text-emerald-400"></i> 1:3 R:R TRADE MANAGER</span>
+        <!-- Card 1: 1:3 R:R LIVE TRADE MANAGER & CTRADER BRIDGE (First on Mobile for quick access) -->
+        <div class="lg:col-span-4 order-1 lg:order-2 nexus-card rounded-xl p-2.5 flex flex-col justify-between">
+          <div class="flex flex-wrap items-center justify-between gap-1 text-[10px] font-mono font-bold text-slate-200">
+            <span class="flex items-center gap-1"><i class="fa-solid fa-shield-halved text-emerald-400"></i> 1:3 R:R MANAGER</span>
             <div class="flex items-center gap-1.5">
-              <button onclick="sendOrderToCTrader()" id="btn-send-ctrader" class="px-2 py-0.5 rounded bg-amber-500/20 border border-amber-400/60 text-amber-300 text-[9px] font-bold hover:bg-amber-500/30 transition">
+              <button onclick="sendOrderToCTrader()" id="btn-send-ctrader" class="px-2 py-1 rounded bg-amber-500/20 border border-amber-400/60 text-amber-300 text-[9px] font-bold hover:bg-amber-500/30 transition">
                 🚀 cTrader руу илгээх
               </button>
-              <button onclick="activateLiveTradeTracking()" id="btn-track-trade" class="px-2 py-0.5 rounded bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-[9px] hover:bg-cyan-500/30 transition">
+              <button onclick="activateLiveTradeTracking()" id="btn-track-trade" class="px-2 py-1 rounded bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-[9px] hover:bg-cyan-500/30 transition">
                 ▶ Хянах
               </button>
               <button onclick="logSignalToJournal()" class="text-[9px] text-emerald-400 hover:underline font-bold">+ Журнал</button>
             </div>
           </div>
 
-          <div id="signal-box-container" class="flex-1 signal-card-glow rounded-xl p-2.5 flex flex-col justify-between font-mono text-[10px] mt-1">
+          <div id="signal-box-container" class="flex-1 signal-card-glow rounded-xl p-2.5 flex flex-col justify-between font-mono text-[10px] mt-1.5 gap-1.5">
             <div class="flex items-center justify-between border-b border-emerald-500/30 pb-1">
               <div class="flex items-center gap-1.5 font-extrabold text-xs">
                 <span class="bg-emerald-500 text-slate-950 px-1.5 py-0.2 rounded">X</span>
@@ -485,18 +414,18 @@
               </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-1.5 text-center my-1">
-              <div class="bg-slate-950/75 border border-slate-800 rounded p-1">
+            <div class="grid grid-cols-3 gap-1.5 text-center">
+              <div class="bg-slate-950/75 border border-slate-800 rounded p-1.5">
                 <span class="text-cyan-300 block text-[8px]">ENTRY (ОРОЛТ)</span>
-                <span class="text-white font-bold text-[11px]" id="sig-entry">4,018.42</span>
+                <span class="text-white font-bold text-xs" id="sig-entry">4,018.42</span>
               </div>
-              <div class="bg-slate-950/75 border border-rose-500/40 rounded p-1">
+              <div class="bg-slate-950/75 border border-rose-500/40 rounded p-1.5">
                 <span class="text-rose-400 block text-[8px]" id="sl-label-title">АНХНЫ SL</span>
-                <span class="text-rose-300 font-bold text-[11px]" id="sig-sl">4,010.42</span>
+                <span class="text-rose-300 font-bold text-xs" id="sig-sl">4,010.42</span>
               </div>
-              <div class="bg-slate-950/75 border border-emerald-500/40 rounded p-1">
+              <div class="bg-slate-950/75 border border-emerald-500/40 rounded p-1.5">
                 <span class="text-emerald-300 block text-[8px]">1:3 R:R ГАРАЛТ</span>
-                <span class="text-emerald-400 font-bold text-[11px]" id="sig-target">4,042.42</span>
+                <span class="text-emerald-400 font-bold text-xs" id="sig-target">4,042.42</span>
               </div>
             </div>
 
@@ -505,28 +434,54 @@
               <div class="leading-tight font-sans text-[10px]">
                 <span id="live-mgmt-stage" class="font-mono font-bold text-amber-300 uppercase block text-[9px]">АРИЛЖААНЫ УДИРДЛАГА (STANDBY):</span>
                 <span id="live-mgmt-action" class="text-slate-200">
-                  +1R (4,026.42) хүрмэгц SL-ийг Breakeven (4,018.42) руу зөөнө. +2R (4,034.42) хүрмэгц SL-ийг +1R-т түгжинэ.
+                  +1R хүрмэгц SL-ийг Breakeven руу зөөнө. +2R хүрмэгц SL-ийг +1R-т түгжинэ.
                 </span>
               </div>
             </div>
           </div>
         </div>
 
+        <!-- Card 2: MARKET SENTIMENT (AI) -->
+        <div class="lg:col-span-4 order-2 lg:order-1 nexus-card rounded-xl p-3 flex flex-col justify-between gap-2">
+          <div class="flex items-center justify-between text-[10px] font-mono font-bold text-slate-200">
+            <span>MARKET SENTIMENT (AI)</span>
+            <span class="text-cyan-400">✦ ❯</span>
+          </div>
+
+          <div class="flex flex-col items-center justify-center">
+            <div class="text-center leading-tight py-1">
+              <div class="text-2xl font-extrabold font-mono text-white" id="sent-main-pct">72%</div>
+              <div class="text-xs font-bold text-emerald-400" id="sent-main-lbl">BULLISH</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 font-mono text-[10px] text-center">
+            <div class="bg-emerald-950/60 border border-emerald-500/40 rounded-lg py-1.5">
+              <div class="text-emerald-300 text-[9px]">Bullish</div>
+              <div class="text-emerald-400 font-bold" id="sent-bull">72%</div>
+            </div>
+            <div class="bg-slate-900/80 border border-slate-700/60 rounded-lg py-1.5">
+              <div class="text-slate-300 text-[9px]">Neutral</div>
+              <div class="text-white font-bold" id="sent-neut">18%</div>
+            </div>
+            <div class="bg-rose-950/50 border border-rose-500/40 rounded-lg py-1.5">
+              <div class="text-rose-300 text-[9px]">Bearish</div>
+              <div class="text-rose-400 font-bold" id="sent-bear">10%</div>
+            </div>
+          </div>
+        </div>
+
         <!-- Card 3: 1:3 R:R MILESTONE PROBABILITY -->
-        <div class="col-span-4 nexus-card rounded-xl p-3 flex flex-col justify-between">
+        <div class="lg:col-span-4 order-3 nexus-card rounded-xl p-3 flex flex-col justify-between min-h-[150px]">
           <div class="flex items-center justify-between text-[10px] font-mono font-bold text-slate-200">
             <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-cyan-400"></span> 1:3 R:R MILESTONE MATRIX</span>
             <span class="text-slate-400">LIVE</span>
           </div>
 
-          <div class="flex-1 flex items-end justify-between px-3 pt-4 pb-1 gap-3 relative font-mono text-[10px]">
-            <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 240 100">
-              <path d="M 25 65 Q 90 30 210 15" fill="none" stroke="#34d399" stroke-width="1.5" stroke-dasharray="2 2"/>
-            </svg>
-
+          <div class="flex-1 flex items-end justify-between px-3 pt-4 pb-1 gap-3 relative font-mono text-[10px] h-28">
             <div class="flex flex-col items-center flex-1 h-full justify-end">
               <span class="text-emerald-400 font-bold mb-1" id="prob-1r-txt">84%</span>
-              <div id="prob-1r-bar" class="w-full bg-gradient-to-t from-emerald-950 via-emerald-500 to-emerald-300 rounded-t-md shadow-[0_0_12px_rgba(16,185,129,0.5)]" style="height: 84%"></div>
+              <div id="prob-1r-bar" class="w-full bg-gradient-to-t from-emerald-950 via-emerald-500 to-emerald-300 rounded-t-md" style="height: 84%"></div>
               <span class="text-slate-300 mt-1 text-[8px]">+1R (BE)</span>
             </div>
             <div class="flex flex-col items-center flex-1 h-full justify-end">
@@ -546,7 +501,7 @@
             </div>
             <div class="flex flex-col items-center flex-1 h-full justify-end">
               <span class="text-rose-400 font-bold mb-1" id="prob-sl-txt">14%</span>
-              <div id="prob-sl-bar" class="w-full bg-gradient-to-t from-rose-950 via-rose-600 to-rose-400 rounded-t-md shadow-[0_0_10px_rgba(244,63,94,0.4)]" style="height: 14%"></div>
+              <div id="prob-sl-bar" class="w-full bg-gradient-to-t from-rose-950 via-rose-600 to-rose-400 rounded-t-md" style="height: 14%"></div>
               <span class="text-slate-300 mt-1 text-[8px]">SL Hit</span>
             </div>
           </div>
@@ -554,18 +509,18 @@
       </div>
 
       <!-- Bottom AI INSIGHT Bar -->
-      <div class="h-10 insight-bar rounded-xl px-4 flex items-center justify-between shrink-0">
-        <div class="flex items-center gap-3 text-xs">
+      <div class="insight-bar rounded-xl px-3.5 py-2 lg:h-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 shrink-0">
+        <div class="flex items-center gap-2 text-xs w-full sm:w-auto overflow-hidden">
           <div class="flex items-center gap-1.5 font-bold text-purple-300 shrink-0">
             <i class="fa-solid fa-brain text-purple-400"></i>
             <span>AI INSIGHT</span>
             <span class="text-cyan-400">▸</span>
           </div>
-          <span class="text-slate-100 font-medium truncate" id="ai-insight-text">
+          <span class="text-slate-100 font-medium sm:truncate" id="ai-insight-text">
             "AI Live Scan (1:3 RR)" товчийг дарж орох цэг болон SL зөөх амьд удирдлагыг идэвхжүүлнэ үү.
           </span>
         </div>
-        <button onclick="switchView('analysis')" class="px-3.5 py-1 rounded-lg bg-purple-900/50 hover:bg-purple-800/70 border border-purple-400/50 text-white text-xs font-medium transition shrink-0">
+        <button onclick="switchView('analysis')" class="px-3 py-1 rounded-lg bg-purple-900/50 hover:bg-purple-800/70 border border-purple-400/50 text-white text-xs font-medium transition shrink-0">
           Дэлгэрэнгүй →
         </button>
       </div>
@@ -573,50 +528,46 @@
 
     <!-- ================= VIEW 2: АРИЛЖААНЫ ЖУРНАЛ ================= -->
     <div id="view-journal" class="main-view flex-1 flex flex-col gap-3 overflow-y-auto hidden">
-      <div class="grid grid-cols-4 gap-3">
-        <div class="nexus-card p-4 rounded-xl border-l-4 border-emerald-400">
-          <div class="text-slate-400 font-mono text-[10px] uppercase">AI Win Rate (ICT 2026)</div>
-          <div class="text-2xl font-extrabold font-mono text-emerald-400 mt-1" id="j-winrate">0.0%</div>
-          <div class="text-[10px] text-slate-400 mt-0.5">Нийт хаагдсан арилжаанаас</div>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+        <div class="nexus-card p-3 sm:p-4 rounded-xl border-l-4 border-emerald-400">
+          <div class="text-slate-400 font-mono text-[10px] uppercase">AI Win Rate</div>
+          <div class="text-xl sm:text-2xl font-extrabold font-mono text-emerald-400 mt-1" id="j-winrate">0.0%</div>
         </div>
-        <div class="nexus-card p-4 rounded-xl border-l-4 border-cyan-400">
-          <div class="text-slate-400 font-mono text-[10px] uppercase">Нийт Цэвэр Ашиг (P&L)</div>
-          <div class="text-2xl font-extrabold font-mono text-white mt-1" id="j-pnl">$0.00</div>
-          <div class="text-[10px] text-emerald-400 mt-0.5">SQLite санд хадгалагдсан</div>
+        <div class="nexus-card p-3 sm:p-4 rounded-xl border-l-4 border-cyan-400">
+          <div class="text-slate-400 font-mono text-[10px] uppercase">Нийт P&L</div>
+          <div class="text-xl sm:text-2xl font-extrabold font-mono text-white mt-1" id="j-pnl">0.00 USD</div>
         </div>
-        <div class="nexus-card p-4 rounded-xl border-l-4 border-amber-400">
-          <div class="text-slate-400 font-mono text-[10px] uppercase">Зорилтот R:R Стандарт</div>
-          <div class="text-2xl font-extrabold font-mono text-amber-400 mt-1" id="j-rr">1 : 3.0</div>
-          <div class="text-[10px] text-slate-400 mt-0.5">+1R Breakeven + +2R Trail SL систем</div>
+        <div class="nexus-card p-3 sm:p-4 rounded-xl border-l-4 border-amber-400">
+          <div class="text-slate-400 font-mono text-[10px] uppercase">Зорилтот R:R</div>
+          <div class="text-xl sm:text-2xl font-extrabold font-mono text-amber-400 mt-1" id="j-rr">1 : 3.0</div>
         </div>
-        <div class="nexus-card p-4 rounded-xl border-l-4 border-purple-400">
+        <div class="nexus-card p-3 sm:p-4 rounded-xl border-l-4 border-purple-400">
           <div class="text-slate-400 font-mono text-[10px] uppercase">Нийт Бүртгэл</div>
-          <div class="text-2xl font-extrabold font-mono text-purple-300 mt-1" id="j-total">0</div>
-          <div class="text-[10px] text-slate-400 mt-0.5">Төлөв дээр дарж P&L оруулна</div>
+          <div class="text-xl sm:text-2xl font-extrabold font-mono text-purple-300 mt-1" id="j-total">0</div>
         </div>
       </div>
 
-      <div class="flex-1 nexus-card rounded-xl p-4 flex flex-col overflow-hidden">
-        <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+      <div class="flex-1 nexus-card rounded-xl p-3 sm:p-4 flex flex-col overflow-hidden">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-slate-800">
           <div class="flex items-center gap-2">
             <i class="fa-solid fa-book-journal-whills text-amber-400 text-base"></i>
-            <h2 class="text-sm font-bold text-white">AI Автомат Арилжааны Журнал (1:3 R:R Систем)</h2>
+            <h2 class="text-sm font-bold text-white">AI Автомат Арилжааны Журнал</h2>
           </div>
           <button onclick="logSignalToJournal()" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 font-mono text-xs hover:bg-emerald-500/30">
-            + Одоогийн 1:3 R:R сетапыг бүртгэх
+            + Сетапыг бүртгэх
           </button>
         </div>
-        <div class="flex-1 overflow-y-auto">
-          <table class="w-full text-left font-mono text-xs">
+        <div class="flex-1 overflow-x-auto overflow-y-auto">
+          <table class="w-full text-left font-mono text-xs min-w-[640px]">
             <thead class="bg-slate-900/90 text-slate-400 border-b border-slate-800 sticky top-0">
               <tr>
                 <th class="py-2.5 px-3">Огноо / NY Цаг</th>
-                <th class="py-2.5 px-3">Killzone Сесс</th>
+                <th class="py-2.5 px-3">Сесс</th>
                 <th class="py-2.5 px-3">Чиглэл</th>
-                <th class="py-2.5 px-3">Entry / SL / 3R Target</th>
+                <th class="py-2.5 px-3">Entry / SL / 3R</th>
                 <th class="py-2.5 px-3">R:R</th>
-                <th class="py-2.5 px-3">SL Зөөх & Ашиг Хамгаалах Төлөвлөгөө</th>
-                <th class="py-2.5 px-3">Төлөв (Дарж хаах)</th>
+                <th class="py-2.5 px-3">Төлөвлөгөө</th>
+                <th class="py-2.5 px-3">Төлөв</th>
               </tr>
             </thead>
             <tbody id="journal-tbody" class="divide-y divide-slate-800/70 text-slate-200">
@@ -626,16 +577,16 @@
       </div>
     </div>
 
-    <!-- ================= VIEW 3: LIVE ГРАФИК (PEPPERSTONE XAUUSD) ================= -->
-    <div id="view-chart" class="main-view flex-1 nexus-card rounded-xl overflow-hidden hidden">
-      <div id="tv-chart-embed" class="w-full h-full"></div>
+    <!-- ================= VIEW 3: LIVE ГРАФИК ================= -->
+    <div id="view-chart" class="main-view flex-1 nexus-card rounded-xl overflow-hidden hidden min-h-[480px]">
+      <div id="tv-chart-embed" class="w-full h-[480px] lg:h-full"></div>
     </div>
 
     <!-- ================= VIEW 4-7: БУСАД ЦЭСҮҮД ================= -->
-    <div id="view-analysis" class="main-view flex-1 nexus-card rounded-xl p-5 overflow-y-auto hidden">
+    <div id="view-analysis" class="main-view flex-1 nexus-card rounded-xl p-4 sm:p-5 overflow-y-auto hidden">
       <div class="flex items-center justify-between mb-3">
-        <h2 class="text-base font-bold text-cyan-400"><i class="fa-solid fa-microchip mr-2"></i>ICT 2026 1:3 R:R & SL Management Analysis</h2>
-        <button onclick="triggerBackendScan()" class="px-3 py-1 rounded bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 font-mono text-xs">Шинээр тооцоолох</button>
+        <h2 class="text-sm sm:text-base font-bold text-cyan-400"><i class="fa-solid fa-microchip mr-2"></i>ICT 2026 1:3 R:R & SL Management Analysis</h2>
+        <button onclick="triggerBackendScan()" class="px-3 py-1 rounded bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 font-mono text-xs">Шинэчлэх</button>
       </div>
       <div id="live-backend-output" class="bg-slate-950/90 border border-slate-800 rounded-xl p-4 font-mono text-xs text-slate-200 whitespace-pre-wrap leading-relaxed">
         Дээд самбарын "AI Live Scan (1:3 RR)" товчийг дарж дэлгэрэнгүй тайланг авна уу.
@@ -645,8 +596,8 @@
     <div id="view-signals" class="main-view flex-1 nexus-card rounded-xl p-5 overflow-y-auto hidden">
       <h2 class="text-base font-bold text-emerald-400 mb-3"><i class="fa-solid fa-shield-halved mr-2"></i>1:3 R:R Ашиг Хамгаалах Дүрэм</h2>
       <ul class="list-disc pl-5 space-y-2 text-xs text-slate-300">
-        <li><b>+1.0R хүрэхэд:</b> SL-ийг Entry цэг (Breakeven) рүү зөөж эрсдэлийг 0% болгоно. Хүсвэл 50% CE дээр тал ашгаа авна.</li>
-        <li><b>+2.0R хүрэхэд:</b> SL-ийг +1.0R түвшинд (шинэ M5 FVG-ийн ард) зөөж, ямар ч тохиолдолд +1R ашигтай гарах нөхцөлийг бүрдүүлнэ.</li>
+        <li><b>+1.0R хүрэхэд:</b> SL-ийг Entry цэг (Breakeven) рүү зөөж эрсдэлийг 0% болгоно.</li>
+        <li><b>+2.0R хүрэхэд:</b> SL-ийг +1.0R түвшинд зөөж, +1R ашгийг бүрэн түгжинэ.</li>
         <li><b>+3.0R хүрэхэд:</b> Зорилтот BSL/SSL ликвидность дээр арилжааг 100% хаана.</li>
       </ul>
     </div>
@@ -657,33 +608,31 @@
     </div>
 
     <div id="view-macro" class="main-view flex-1 nexus-card rounded-xl p-5 overflow-y-auto hidden">
-      <h2 class="text-base font-bold text-purple-400 mb-3"><i class="fa-regular fa-calendar-days mr-2"></i>Эдийн Засгийн Календарь (Red Folder News)</h2>
+      <h2 class="text-base font-bold text-purple-400 mb-3"><i class="fa-regular fa-calendar-days mr-2"></i>Эдийн Засгийн Календарь</h2>
       <div class="p-3 bg-rose-950/30 border border-rose-500/40 rounded-lg font-mono text-xs flex justify-between">
         <span>08:30 EST — US High Impact Macro Window</span>
-        <span class="text-rose-400 font-bold">HIGH IMPACT (Auto-Wait 15m)</span>
+        <span class="text-rose-400 font-bold">HIGH IMPACT</span>
       </div>
     </div>
 
     <div id="view-strategy" class="main-view flex-1 nexus-card rounded-xl p-5 overflow-y-auto hidden">
-      <h2 class="text-base font-bold text-cyan-400 mb-3"><i class="fa-solid fa-chess-knight mr-2"></i>ICT 2026 143 Хичээлийн Алтан Дүрмүүд</h2>
+      <h2 class="text-base font-bold text-cyan-400 mb-3"><i class="fa-solid fa-chess-knight mr-2"></i>ICT 2026 Алтан Дүрмүүд</h2>
       <ul class="list-disc pl-5 space-y-2 text-xs text-slate-300">
-        <li><b>Time First:</b> Dead Time (05:00-07:00 EST) дотор арилжаа нээхийг хатуу хориглоно.</li>
-        <li><b>First Presented FVG:</b> Сесс эхэлсний дараах анхны хүчтэй Displacement FVG дээр л орно.</li>
-        <li><b>Dynamic SL Trail:</b> TP1/TP2/TP3 гэж хуваахын оронд 1:3 R:R хүртэл SL-ээ шаталж зөөж ашгаа хамгаална.</li>
+        <li><b>Time First:</b> Dead Time (05:00-07:00 EST) дотор арилжаа нээхийг хориглоно.</li>
+        <li><b>Dynamic SL Trail:</b> 1:3 R:R хүртэл SL-ээ шаталж зөөж ашгаа хамгаална.</li>
       </ul>
     </div>
 
     <div id="view-settings" class="main-view flex-1 nexus-card rounded-xl p-5 overflow-y-auto hidden">
       <h2 class="text-base font-bold text-white mb-3"><i class="fa-solid fa-gear mr-2"></i>Системийн Тохиргоо</h2>
-      <div class="text-xs font-mono text-emerald-400">FastAPI Backend: http://127.0.0.1:8000 (PEPPERSTONE:XAUUSD 3s Live Sync + cTrader Bridge)</div>
+      <div class="text-xs font-mono text-emerald-400">Cloud Mode Active (PEPPERSTONE:XAUUSD 3s Live Sync + cTrader Cloud Bridge)</div>
     </div>
 
   </div>
 
-  <!-- ================= SCRIPTS: 3D SPHERE + LIVE 1:3 RR + CTRADER BRIDGE ================= -->
+  <!-- ================= SCRIPTS ================= -->
   <script src="https://s3.tradingview.com/tv.js"></script>
   <script>
-    // 1. View Navigation
     let tvInitialized = false;
     function switchView(viewId) {
       document.querySelectorAll('.main-view').forEach(v => v.classList.add('hidden'));
@@ -711,7 +660,7 @@
       }
     }
 
-    // 2. 3D Continuous Glowing Ribbon Sphere
+    // 3D Sphere
     const canvas = document.getElementById('sphere-canvas');
     const ctx = canvas.getContext('2d');
 
@@ -726,7 +675,7 @@
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
     window.addEventListener('resize', resizeSphereCanvas);
-    setTimeout(resizeSphereCanvas, 20);
+    setTimeout(resizeSphereCanvas, 50);
 
     let sphereState = 'default';
     const palettes = {
@@ -763,29 +712,19 @@
     }
 
     const strands = [];
-    const SEGMENTS = 44;
-    for (let i = 0; i < 55; i++) {
+    const SEGMENTS = 40;
+    for (let i = 0; i < 45; i++) {
       strands.push({
-        isCore: true, spread: (i / 55 - 0.5) * 1.4, phase: (i / 55) * Math.PI * 2,
-        speedOffset: 0.7 + Math.random() * 0.8, sparkPos: Math.random(), hasSquare: i % 11 === 0
+        isCore: true, spread: (i / 45 - 0.5) * 1.4, phase: (i / 45) * Math.PI * 2,
+        speedOffset: 0.7 + Math.random() * 0.8, sparkPos: Math.random()
       });
     }
-    for (let i = 0; i < 85; i++) {
+    for (let i = 0; i < 70; i++) {
       strands.push({
         isCore: false, tiltX: (Math.random() - 0.5) * Math.PI * 2,
         tiltY: (Math.random() - 0.5) * Math.PI * 2, tiltZ: (Math.random() - 0.5) * Math.PI * 2,
         phase: Math.random() * Math.PI * 2, speedOffset: 0.5 + Math.random() * 0.9,
-        sparkPos: Math.random(), hasSquare: i % 14 === 0
-      });
-    }
-
-    const dustNodes = [];
-    for (let i = 0; i < 160; i++) {
-      const u = Math.random(), v = Math.random();
-      const theta = u * 2 * Math.PI, phi = Math.acos(2 * v - 1), rMult = 1.02 + Math.random() * 0.25;
-      dustNodes.push({
-        x: rMult * Math.sin(phi) * Math.cos(theta), y: rMult * Math.sin(phi) * Math.sin(theta),
-        z: rMult * Math.cos(phi), size: 0.8 + Math.random() * 1.8, twinkle: Math.random() * Math.PI * 2
+        sparkPos: Math.random()
       });
     }
 
@@ -813,27 +752,23 @@
       time += pal.speed;
       if (!dragging) rotY += pal.speed * 0.85;
 
-      const cx = cw / 2, cy = ch / 2, R = Math.min(cw, ch) * 0.41, fov = 520;
+      const cx = cw / 2, cy = ch / 2, R = Math.min(cw, ch) * 0.40, fov = 520;
       ctx.save();
       ctx.globalCompositeOperation = 'lighter';
 
       const bgGrad = ctx.createRadialGradient(cx, cy, R * 0.05, cx, cy, R * 1.25);
       bgGrad.addColorStop(0, `rgba(${pal.coreA[0]}, ${pal.coreA[1]}, ${pal.coreA[2]}, 0.22)`);
-      bgGrad.addColorStop(0.45, `rgba(${pal.shellA[0]}, ${pal.shellA[1]}, ${pal.shellA[2]}, 0.10)`);
-      bgGrad.addColorStop(0.82, `rgba(${pal.shellB[0]}, ${pal.shellB[1]}, ${pal.shellB[2]}, 0.16)`);
+      bgGrad.addColorStop(0.5, `rgba(${pal.shellA[0]}, ${pal.shellA[1]}, ${pal.shellA[2]}, 0.12)`);
       bgGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = bgGrad;
       ctx.beginPath(); ctx.arc(cx, cy, R * 1.25, 0, Math.PI * 2); ctx.fill();
 
-      ctx.strokeStyle = pal.rim; ctx.lineWidth = 1.4; ctx.shadowBlur = 18; ctx.shadowColor = pal.rim;
-      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke(); ctx.shadowBlur = 0;
+      ctx.strokeStyle = pal.rim; ctx.lineWidth = 1.3;
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
 
       for (let s = 0; s < strands.length; s++) {
         const st = strands[s];
         ctx.beginPath();
-        let sparkScreen = null;
-        const sparkIdx = Math.floor(((st.sparkPos + time * st.speedOffset * 0.4) % 1) * SEGMENTS);
-
         for (let i = 0; i <= SEGMENTS; i++) {
           const u = i / SEGMENTS;
           let px, py, pz;
@@ -854,32 +789,14 @@
             py = y1 * Math.cos(st.tiltZ) + x1 * Math.sin(st.tiltZ);
             pz = z1;
           }
-
           const rot = rotate3D(px, py, pz, rotX, rotY);
           const scale = fov / (fov + rot.z), sx = cx + rot.x * scale, sy = cy + rot.y * scale;
           if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
-          if (i === sparkIdx) sparkScreen = { x: sx, y: sy, z: rot.z, scale };
         }
-
         const col = st.isCore ? (s % 2 === 0 ? pal.coreA : pal.coreB) : (s % 3 === 0 ? pal.shellB : pal.shellA);
         ctx.strokeStyle = `rgba(${col[0]}, ${col[1]}, ${col[2]}, ${st.isCore ? 0.38 : 0.24})`;
-        ctx.lineWidth = st.isCore ? 1.35 : 0.9;
+        ctx.lineWidth = st.isCore ? 1.3 : 0.9;
         ctx.stroke();
-
-        if (sparkScreen && sparkScreen.z < R * 0.6) {
-          const spR = (st.isCore ? 2.4 : 1.9) * sparkScreen.scale;
-          ctx.fillStyle = '#ffffff'; ctx.shadowBlur = 12; ctx.shadowColor = `rgb(${col[0]}, ${col[1]}, ${col[2]})`;
-          ctx.beginPath(); ctx.arc(sparkScreen.x, sparkScreen.y, spR, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
-        }
-      }
-
-      for (let i = 0; i < dustNodes.length; i++) {
-        const d = dustNodes[i];
-        const rot = rotate3D(d.x * R, d.y * R, d.z * R, rotX, rotY);
-        const scale = fov / (fov + rot.z), sx = cx + rot.x * scale, sy = cy + rot.y * scale;
-        const tw = 0.35 + 0.65 * Math.sin(time * 3 + d.twinkle);
-        ctx.fillStyle = `rgba(224, 242, 254, ${tw * 0.75})`;
-        ctx.beginPath(); ctx.arc(sx, sy, d.size * scale, 0, Math.PI * 2); ctx.fill();
       }
 
       ctx.restore();
@@ -887,7 +804,7 @@
     }
     renderLivingSphere();
 
-    // 3. Flow Stream Wave Canvas
+    // Flow Stream Wave
     const sCanvas = document.getElementById('stream-canvas');
     const sCtx = sCanvas.getContext('2d');
     let sw = 0, sh = 0;
@@ -896,7 +813,7 @@
       sw = sCanvas.width = r.width; sh = sCanvas.height = r.height;
     }
     window.addEventListener('resize', resizeStream);
-    setTimeout(resizeStream, 30);
+    setTimeout(resizeStream, 50);
 
     let sTime = 0;
     function renderStreamWave() {
@@ -904,10 +821,9 @@
       sTime += 0.045;
       const waves = [
         { color: 'rgba(0, 242, 254, 0.75)', amp: 6, freq: 0.022, phase: sTime },
-        { color: 'rgba(251, 191, 36, 0.65)', amp: 5, freq: 0.018, phase: -sTime * 0.8 },
-        { color: 'rgba(168, 85, 247, 0.5)', amp: 4, freq: 0.03, phase: sTime * 1.3 }
+        { color: 'rgba(251, 191, 36, 0.65)', amp: 5, freq: 0.018, phase: -sTime * 0.8 }
       ];
-      waves.forEach((w, idx) => {
+      waves.forEach(w => {
         sCtx.beginPath();
         for (let x = 0; x < sw; x += 3) {
           const y = sh / 2 + Math.sin(x * w.freq + w.phase) * w.amp * Math.sin(x / sw * Math.PI);
@@ -919,7 +835,7 @@
     }
     renderStreamWave();
 
-    // 4. Clock Update
+    // Clock
     function updateClock() {
       const now = new Date();
       const est = now.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false });
@@ -929,9 +845,8 @@
     updateClock();
 
     // =========================================================================
-    // 5. LIVE 1:3 R:R TRADE MANAGER & CTRADER BRIDGE
+    // CLOUD-READY API CALLS (RELATIVE PATHS /api/...)
     // =========================================================================
-    let latestScanData = null;
     let activeTrade = {
       active: true,
       direction: 'BUY',
@@ -947,18 +862,10 @@
       const sl = parseFloat(document.getElementById('sig-sl').innerText.replace(/,/g, ''));
       const target = parseFloat(document.getElementById('sig-target').innerText.replace(/,/g, ''));
 
-      activeTrade = {
-        active: true,
-        direction: dir,
-        entry: entry,
-        initialSl: sl,
-        currentSl: sl,
-        target3R: target
-      };
-
+      activeTrade = { active: true, direction: dir, entry: entry, initialSl: sl, currentSl: sl, target3R: target };
       const btn = document.getElementById('btn-track-trade');
       btn.innerText = "● Хянаж байна";
-      btn.className = "px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-400 text-emerald-300 text-[9px] font-bold";
+      btn.className = "px-2 py-1 rounded bg-emerald-500/20 border border-emerald-400 text-emerald-300 text-[9px] font-bold";
     }
 
     async function sendOrderToCTrader() {
@@ -978,12 +885,12 @@
         });
         if (res.ok) {
           const btn = document.getElementById('btn-send-ctrader');
-          btn.innerText = "✓ cTrader-т илгээгдлээ";
-          btn.className = "px-2 py-0.5 rounded bg-emerald-500/30 border border-emerald-400 text-emerald-300 text-[9px] font-bold";
+          btn.innerText = "✓ Илгээгдлээ";
+          btn.className = "px-2 py-1 rounded bg-emerald-500/30 border border-emerald-400 text-emerald-300 text-[9px] font-bold";
           activateLiveTradeTracking();
         }
       } catch (e) {
-        alert("FastAPI сервертэй холбогдож чадсангүй! Uvicorn асаалттай эсэхийг шалгана уу.");
+        alert("Сервертэй холбогдож чадсангүй!");
       }
     }
 
@@ -998,10 +905,6 @@
       const rBadge = document.getElementById('live-r-badge');
       const sign = currentR >= 0 ? '+' : '';
       rBadge.innerText = `Явц: ${sign}${currentR.toFixed(2)}R`;
-      rBadge.className = currentR >= 1.0
-        ? "px-1.5 py-0.5 rounded bg-emerald-950 border border-emerald-500 text-emerald-300 text-[9px] font-bold"
-        : (currentR < 0 ? "px-1.5 py-0.5 rounded bg-rose-950 border border-rose-500 text-rose-300 text-[9px] font-bold"
-                        : "px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-cyan-300 text-[9px] font-bold");
 
       const beLevel = activeTrade.entry;
       const plus1RLevel = isBuy ? +(activeTrade.entry + risk).toFixed(2) : +(activeTrade.entry - risk).toFixed(2);
@@ -1015,36 +918,28 @@
 
       if (currentR <= -1.0) {
         box.className = "bg-rose-950/90 border border-rose-500 rounded-lg px-2.5 py-1.5 flex items-start gap-2";
-        stage.className = "font-mono font-bold text-rose-300 uppercase block text-[9px]";
         stage.innerText = "🛑 SL ШАЛГАГДЛАА (-1.0R):";
-        action.innerText = `Ханш анхны SL (${activeTrade.initialSl}) түвшинд хүрлээ. Дүрмийн дагуу арилжаанаас гарч дараагийн Killzone сессийг хүлээнэ үү.`;
+        action.innerText = `Ханш анхны SL (${activeTrade.initialSl}) түвшинд хүрлээ.`;
       } else if (currentR >= 3.0) {
-        box.className = "bg-emerald-950/95 border border-emerald-400 rounded-lg px-2.5 py-1.5 flex items-start gap-2 shadow-[0_0_15px_rgba(16,185,129,0.4)]";
-        stage.className = "font-mono font-bold text-emerald-300 uppercase block text-[9px]";
+        box.className = "bg-emerald-950/95 border border-emerald-400 rounded-lg px-2.5 py-1.5 flex items-start gap-2";
         stage.innerText = "🎯 1:3 R:R ЗОРИЛТ БИЕЛЛЭЭ — ОДОО ГАР!";
-        action.innerText = `Ханш ${activeTrade.target3R} (+3.0R) зорилтод хүрлээ! Позицоо 100% хааж ашгаа бүрэн баталгаажуулна уу.`;
+        action.innerText = `Ханш ${activeTrade.target3R} (+3.0R) зорилтод хүрлээ! Позицоо 100% хаана уу.`;
       } else if (currentR >= 2.0) {
         activeTrade.currentSl = plus1RLevel;
         slTitle.innerText = "ЗӨӨСӨН SL (+1R)";
         slVal.innerText = plus1RLevel.toLocaleString('en-US', { minimumFractionDigits: 2 });
-        box.className = "bg-emerald-950/80 border border-emerald-500/70 rounded-lg px-2.5 py-1.5 flex items-start gap-2";
-        stage.className = "font-mono font-bold text-emerald-300 uppercase block text-[9px]";
         stage.innerText = "🔒 АШИГ ТҮГЖИХ (+2.0R ДАВЛАА):";
-        action.innerText = `SL-ийг яг одоо +1R (${plus1RLevel}) түвшин рүү зөөж +1R ашгаа баталгаажуул! Үлдсэн хэсгийг ${activeTrade.target3R} (3R) хүртэл барина.`;
+        action.innerText = `SL-ийг +1R (${plus1RLevel}) түвшин рүү зөөж ашгаа баталгаажуул!`;
       } else if (currentR >= 1.0) {
         activeTrade.currentSl = beLevel;
         slTitle.innerText = "SL (BREAKEVEN)";
         slVal.innerText = beLevel.toLocaleString('en-US', { minimumFractionDigits: 2 });
-        box.className = "bg-cyan-950/85 border border-cyan-400/70 rounded-lg px-2.5 py-1.5 flex items-start gap-2";
-        stage.className = "font-mono font-bold text-cyan-300 uppercase block text-[9px]";
         stage.innerText = "🛡️ ЭРСДЭЛ ТЭГЛЭХ (+1.0R ХҮРЛЭЭ):";
-        action.innerText = `SL-ийг орох цэг (${beLevel} Breakeven) руу зөөж эрсдэлээ 0% болго! 50% CE дээр хэсэгчилж хаагаад +2R (${plus2RLevel}) хүлээнэ.`;
+        action.innerText = `SL-ийг орох цэг (${beLevel} Breakeven) руу зөөж эрсдэлээ 0% болго!`;
       } else {
         slTitle.innerText = "АНХНЫ SL";
-        box.className = "bg-slate-950/90 border border-amber-500/50 rounded-lg px-2.5 py-1.5 flex items-start gap-2";
-        stage.className = "font-mono font-bold text-amber-300 uppercase block text-[9px]";
         stage.innerText = "⏳ ПОЗИЦ ХАДГАЛАХ (HOLD):";
-        action.innerText = `Анхны SL (${activeTrade.initialSl}) хэвээр барина. Ханш +1R (${plus1RLevel}) хүрмэгц SL-ийг ${beLevel} (Breakeven) рүү зөөнө.`;
+        action.innerText = `+1R (${plus1RLevel}) хүрмэгц SL-ийг ${beLevel} (Breakeven) рүү зөөнө.`;
       }
     }
 
@@ -1063,7 +958,7 @@
       const arrow = m.change >= 0 ? '▲' : '▼';
       const chEl = document.getElementById('live-gold-change');
       chEl.innerText = `${sign}${m.change} (${sign}${m.change_pct}%) ${arrow}`;
-      chEl.className = m.change >= 0 ? 'text-emerald-400 font-mono font-bold text-xs' : 'text-rose-400 font-mono font-bold text-xs';
+      chEl.className = m.change >= 0 ? 'text-emerald-400 font-mono font-bold text-[10px] sm:text-xs' : 'text-rose-400 font-mono font-bold text-[10px] sm:text-xs';
 
       document.getElementById('dxy-val').innerText = m.dxy;
       document.getElementById('us10y-val').innerText = m.us10y + '%';
@@ -1085,13 +980,12 @@
 
     async function triggerBackendScan() {
       setSphereState('thinking');
-      document.getElementById('ai-insight-text').innerText = "AI Агентууд Pepperstone Spot ханш дээр 1:3 R:R оролт болон SL хамгаалах түвшнүүдийг тооцоолж байна...";
+      document.getElementById('ai-insight-text').innerText = "AI Агентууд Pepperstone Spot ханш дээр 1:3 R:R сетап тооцоолж байна...";
 
       try {
         const res = await fetch('/api/full-scan', { method: 'POST' });
         if (!res.ok) throw new Error('Scan error');
         const data = await res.json();
-        latestScanData = data;
 
         const ai = data.ai;
         if (ai.signal === 'BUY') setSphereState('buy');
@@ -1119,7 +1013,7 @@
         const cbtn = document.getElementById('btn-send-ctrader');
         if (cbtn) {
           cbtn.innerText = "🚀 cTrader руу илгээх";
-          cbtn.className = "px-2 py-0.5 rounded bg-amber-500/20 border border-amber-400/60 text-amber-300 text-[9px] font-bold hover:bg-amber-500/30 transition";
+          cbtn.className = "px-2 py-1 rounded bg-amber-500/20 border border-amber-400/60 text-amber-300 text-[9px] font-bold hover:bg-amber-500/30 transition";
         }
 
         activeTrade = {
@@ -1134,7 +1028,7 @@
         applyMarketToUI(data.market, data.time);
       } catch (e) {
         setSphereState('default');
-        document.getElementById('ai-insight-text').innerText = "Сервертэй холбогдоход алдаа гарлаа. Uvicorn асаалттай эсэхийг шалгана уу.";
+        document.getElementById('ai-insight-text').innerText = "Сервертэй холбогдоход алдаа гарлаа.";
       }
     }
 
@@ -1146,7 +1040,7 @@
         if (data.stats) {
           document.getElementById('j-winrate').innerText = data.stats.win_rate + '%';
           const pnl = data.stats.total_pnl;
-          document.getElementById('j-pnl').innerText = (pnl >= 0 ? '+$' : '-$') + Math.abs(pnl).toLocaleString();
+          document.getElementById('j-pnl').innerText = (pnl >= 0 ? '+' : '-') + Math.abs(pnl).toLocaleString() + ' USD';
           document.getElementById('j-rr').innerText = '1 : ' + (data.stats.avg_rr || 3.0);
           document.getElementById('j-total').innerText = data.stats.total_trades;
         }
@@ -1166,7 +1060,7 @@
             <td class="py-3 px-3 font-sans text-slate-300">${t.reasoning}</td>
             <td class="py-3 px-3">
               <button onclick="closeTradePrompt(${t.id})" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-emerald-950 text-emerald-400 border border-slate-700 font-bold transition">
-                ${t.status} (${t.pnl >= 0 ? '+' : ''}$${t.pnl})
+                ${t.status} (${t.pnl >= 0 ? '+' : ''}${t.pnl} USD)
               </button>
             </td>
           </tr>
